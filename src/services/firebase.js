@@ -5,12 +5,21 @@ import "firebase/storage"
 
 // Firebase Configs
 const firebaseConfig = {
-  apiKey: "AIzaSyCNexJ7p00a9cCe_NCvlN0CfFw7xx0_-kc",
-  authDomain: "chat-room-18213.firebaseapp.com",
-  projectId: "chat-room-18213",
-  storageBucket: "chat-room-18213.appspot.com",
-  messagingSenderId: "637500390783",
-  appId: "1:637500390783:web:d99c8fec19a075a2b8ee4a",
+
+  apiKey: "AIzaSyAoISTgFdXmL9bfUa9BGm1TVj2Mk1pyp4k",
+
+  authDomain: "edulink-416909.firebaseapp.com",
+
+  projectId: "edulink-416909",
+
+  storageBucket: "edulink-416909.appspot.com",
+
+  messagingSenderId: "828688422847",
+
+  appId: "1:828688422847:web:3b52a7175c51ef00dab30a",
+
+  measurementId: "G-ZJJ7995D00"
+
 };
 
 // Checking if app already initialize then don't initialize again
