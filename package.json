@@ -18,8 +18,8 @@
     "tailwind-scrollbar-hide": "^1.0.3"
   },
   "scripts": {
-    "start": "react-scripts --max_old_space_size=4096 start", "craco start",
-    "build": "react-scripts --max_old_space_size=4096 build", "craco build",
+    "start": "craco start",
+    "build": "craco build",
     "test": "craco test"
   },
   "eslintConfig": {
