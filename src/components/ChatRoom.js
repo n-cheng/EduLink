@@ -61,10 +61,9 @@ const ChatRoom = ({ user }) => {
       }
     }
 
-    if (formRef !== null) {
+    if (formRef && formRef.current) {
       formRef.current.addEventListener("keydown", submitFormOnCtrlEnter);
-      return () =>
-        formRef.current.removeEventListener("keydown", submitFormOnCtrlEnter);
+      formRef.current.removeEventListener("keydown", submitFormOnCtrlEnter);
     }
   }, [text, formRef, sendMessage]);
 
