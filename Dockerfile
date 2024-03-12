@@ -7,8 +7,8 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 # Bundle app source
-COPY . .
+COPY . ./
 # Binding port
-EXPOSE 3000
+EXPOSE 8080
 # Command to run our app
-CMD [ "npm", "run", "start"]
+CMD [ "npm", "start"]
