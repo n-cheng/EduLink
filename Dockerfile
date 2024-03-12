@@ -11,4 +11,4 @@ COPY . .
 # Binding port
 EXPOSE 8080
 # Command to run our app
-CMD [ "npm", "run", "start"]
+CMD [ "node", "App.js"]
