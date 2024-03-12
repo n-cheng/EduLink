@@ -1,12 +1,12 @@
 steps:
 # Build the container image
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'us-west2-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-app-backend-image:$COMMIT_SHA', '.']
+  args: ['build', '-t', 'us-west2-docker.pkg.dev/$PROJECT_ID/gcr.io/my-app-backend-image:$COMMIT_SHA', '.']
   id: Building the container image
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-west2-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-app-backend-image:$COMMIT_SHA']
+  args: ['push', 'us-west2-docker.pkg.dev/$PROJECT_ID/gcr.io/my-app-backend-image:$COMMIT_SHA']
   id: Pushing the image to registry
 # Deploy container image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['run', 'deploy', 'my-app-backend', '--image', 'us-west2-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-app-backend-image:$COMMIT_SHA', '--region', 'us-west2', '--platform', 'managed', "--allow-unauthenticated"]
+  args: ['run', 'deploy', 'my-app-backend', '--image', 'us-west2-docker.pkg.dev/$PROJECT_ID/gcr.io/my-app-backend-image:$COMMIT_SHA', '--region', 'us-west2', '--platform', 'managed', "--allow-unauthenticated"]
