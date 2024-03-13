@@ -3,15 +3,17 @@ import { auth } from "../services/firebase";
 import { LogoutIcon, BellIcon } from "@heroicons/react/outline";
 
 const NotificationButton = () => {
+  const [audio] = useState(() => new Audio('https://storage.googleapis.com/edulink/notification-sound.mp3'));
+  audio.type = "audio/mp3";
+
   const playNotificationSound = () => {
-    // Create an audio element
-    const audio = new Audio('./notification-sound.mp3');
-    // Play the audio
+
     audio.play();
   };
 
   return (
-    <button className="notification-button" onClick={playNotificationSound}>
+    <button className="p-2 mr-2 capitalize border-2 border-solid bg-green-500 border-green-500 font-medium rounded-full text-white lg:hover:bg-green-500 lg:hover:text-white notification-button"
+    title="Ring for Assistance" onClick={playNotificationSound}>
       <BellIcon className="h-6 w-6" />
     </button>
   );
@@ -30,11 +32,7 @@ const Navbar = ({ user }) => {
       </div>
 
       {/* Notification button */}
-      <button
-        className="p-2 mr-2 capitalize border-2 border-solid bg-green-500 border-green-500 font-medium rounded-full text-white lg:hover:bg-green-500 lg:hover:text-white"
-       title="Ring for Assistance"> 
         <NotificationButton/>
-      </button>
 
       {/* Logout button */}
       <button
