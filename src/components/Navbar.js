@@ -1,6 +1,6 @@
 import React from "react";
 import { auth } from "../services/firebase";
-import { LogoutIcon } from "@heroicons/react/outline";
+import { LogoutIcon, BellIcon } from "@heroicons/react/outline";
 
 const NotificationButton = () => {
   const playNotificationSound = () => {
