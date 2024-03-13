@@ -13,7 +13,19 @@ function App() {
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({title: '', body: ''});
   const [isTokenFound, setTokenFound] = useState(false);
-  fetchToken(setTokenFound);
+
+  useEffect(() => {
+    let data;
+
+    async function tokenFunc() {
+      data = await fetchToken(setTokenFound);
+      if (data) {
+        console.log("token is ", data);
+      }
+      return data;
+    }
+    tokenFunc();
+  }, [setTokenFound])
 
   onMessageListener().then(payload => {
     setNotification({title: payload.notification.title, body: payload.notification.body})

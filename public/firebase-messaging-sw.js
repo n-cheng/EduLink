@@ -18,6 +18,17 @@ firebase.initializeApp(firebaseConfig);
 // Retrieve firebase messaging
 const messaging = firebase.messaging();
 
+Notification.requestPermission().then(() => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('../firebase-messaging-sw.js')
+    .then(function(registration) {
+      console.log('Registration successful, scope is:', registration.scope);
+    }).catch(function(err) {
+      console.log('Service worker registration failed, error:', err);
+    });
+  }
+})
+
 messaging.onBackgroundMessage(function(payload) {
   console.log('Received background message ', payload);
 
@@ -26,6 +37,6 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification.body,
   };
 
-  self.registration.showNotification(notificationTitle,
+  return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });

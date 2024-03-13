@@ -35,7 +35,7 @@ const messaging = firebase.messaging(app);
 export { db, auth, googleProvider, storage, messaging };
 
 
-const VAPID_KEY = '0Ag0qmgAwIMGfxW7jHAIQfki0OQ_7DbL1SEJIGdP3a8'
+const VAPID_KEY = 'BDIUYUJKz2ZI948IaCeI7eWRASBtTcF3nSyok7KrBBzPacOqbRjPbrf-eOIvRhg0GiQvTxg7fhSTsnxqkY0kQE0'
 export const fetchToken = (setTokenFound) => {
   return messaging.getToken(VAPID_KEY).then((currentToken) => {
     if (currentToken) {
