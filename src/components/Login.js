@@ -32,7 +32,7 @@ const Login = () => {
     <>
       <div className="relative flex flex-col items-center justify-center w-screen h-screen space-y-10 max-w-screen max-h-screen overflow-hidden">
         <h1 className="text-5xl font-medium font-poppins uppercase">
-          Chat Room
+          Edu Link
         </h1>
 
         <button
