@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { auth } from "../services/firebase";
 import { LogoutIcon, BellIcon } from "@heroicons/react/outline";
 
