@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { auth } from "../services/firebase";
+import { auth, fetchToken } from "../services/firebase";
 import { LogoutIcon, BellIcon } from "@heroicons/react/outline";
 
 const NotificationButton = () => {
@@ -7,8 +7,18 @@ const NotificationButton = () => {
   audio.type = "audio/mp3";
 
   const playNotificationSound = () => {
-
+    fetchToken(setTokenFound);
     audio.play();
+  };
+
+  const setTokenFound = (found) => {
+    // Handle the token found state here
+    // For example, you can update state or perform any other action
+    if (found) {
+      console.log('Token found!');
+    } else {
+      console.log('Token not found.');
+    }
   };
 
   return (
