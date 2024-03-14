@@ -1,6 +1,6 @@
 // Scripts for firebase and firebase messaging
-importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
 // Initialize the Firebase app in the service worker by passing the generated config
 var firebaseConfig = {
@@ -18,17 +18,6 @@ firebase.initializeApp(firebaseConfig);
 // Retrieve firebase messaging
 const messaging = firebase.messaging();
 
-Notification.requestPermission().then(() => {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('../firebase-messaging-sw.js')
-    .then(function(registration) {
-      console.log('Registration successful, scope is:', registration.scope);
-    }).catch(function(err) {
-      console.log('Service worker registration failed, error:', err);
-    });
-  }
-})
-
 messaging.onBackgroundMessage(function(payload) {
   console.log('Received background message ', payload);
 
@@ -37,6 +26,16 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification.body,
   };
 
-  return self.registration.showNotification(notificationTitle,
-    notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("./firebase-messaging-sw.js")
+    .then((registration) => {
+      console.log("Service worker registered:", registration);
+    })
+    .catch((error) => {
+      console.error("Service worker registration failed:", error);
+    });
+}

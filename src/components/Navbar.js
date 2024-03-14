@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { auth, fetchToken } from "../services/firebase";
+import { auth } from "../services/firebase";
 import { LogoutIcon, BellIcon } from "@heroicons/react/outline";
 
 const NotificationButton = () => {
@@ -7,20 +7,9 @@ const NotificationButton = () => {
   audio.type = "audio/mp3";
 
   const playNotificationSound = () => {
-    fetchToken(setTokenFound);
     audio.play();
   };
-
-  const setTokenFound = (found) => {
-    // Handle the token found state here
-    // For example, you can update state or perform any other action
-    if (found) {
-      console.log('Token found!');
-    } else {
-      console.log('Token not found.');
-    }
-  };
-
+  
   return (
     <button className="p-2 mr-2 capitalize border-2 border-solid bg-green-500 border-green-500 font-medium rounded-full text-white lg:hover:bg-green-500 lg:hover:text-white notification-button"
     title="Ring for Assistance" onClick={playNotificationSound}>

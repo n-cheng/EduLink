@@ -3,8 +3,10 @@ import { auth, googleProvider } from "../services/firebase";
 import Loading from "./Loading/Loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { signInWithPopup } from "firebase/auth";
+import { saveMessagingDeviceToken } from "../services/messaging"
 
-const Login = () => {
+const Login = ({ user }) => {
   const [loading, setLoading] = useState(false);
 
   async function signInWithGoogle() {
@@ -14,16 +16,15 @@ const Login = () => {
     */
     setLoading(true);
 
-    await auth
-      .signInWithPopup(googleProvider)
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error(err.message);
-        setLoading(false);
-      });
+    await signInWithPopup(auth, googleProvider)
+    .then(() => {
+      setLoading(false);
+    }).catch((err) => {
+      console.log(err);
+      toast.error(err.message);
+      setLoading(false);
+    })
+    saveMessagingDeviceToken(user?.uid);
   }
 
   if (loading) return <Loading />;

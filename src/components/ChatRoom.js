@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import Message from "./Message";
 import { db, storage } from "../services/firebase";
-import firebase from "firebase";
 import { PlusIcon, PaperAirplaneIcon } from "@heroicons/react/solid";
 import { PhotographIcon } from "@heroicons/react/outline";
 import Navbar from "./Navbar";
 import PreviewImage from "../components/PreviewImage";
+import { onSnapshot, collection, orderBy, addDoc, setDoc, doc, serverTimestamp, getDocs, query, limit } from "firebase/firestore"; 
+import { ref, uploadString } from "firebase/storage";
 
 const ChatRoom = ({ user }) => {
   // to get the messages and store it here
@@ -31,12 +32,10 @@ const ChatRoom = ({ user }) => {
   const messageInputRef = useRef(null);
 
   // This fetch all the messages from the firebase db and set it the message state
-  useEffect(() => {
-    const unsubscribe = db
-      .collection("messages")
-      .orderBy("createdAt", "desc")
-      .limit(150) // only show the last 150 messages
-      .onSnapshot((snapshot) => {
+  useEffect(async () => {  
+    const unsubscribe = await onSnapshot(
+      query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(150)),
+      (snapshot) => {
         setMessages(
           snapshot.docs
             .map((doc) => ({
@@ -46,7 +45,6 @@ const ChatRoom = ({ user }) => {
             .reverse()
         );
       });
-
     return unsubscribe;
   }, []);
 
@@ -95,31 +93,27 @@ const ChatRoom = ({ user }) => {
   }
 
   // It send the message to the firebase storage
-  function sendMessage(e) {
+  async function sendMessage(e) {
     e.preventDefault();
 
     // Checking if text or image is empty then don't send the message
     if (!text && !imageToSend) return null;
 
-    // Adding the data to the messages collection
-    db.collection("messages")
-      .add({
-        text: text || "",
-        uid: user.uid,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        email: user.email,
-      })
-      .then((doc) => {
+    await addDoc(collection(db, "messages"), {
+      text: text || "",
+      uid: user.uid,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      createdAt: serverTimestamp(),
+      email: user.email,
+    }).then((document) => {
         if (imageToSend) {
           setUploadProgress(0);
 
           // upload the image coming from the user
+          const uploadTask = ref(storage, `messages/${document.id}`)
           // encoding the image to data_url and uploading as data-url
-          const uploadTask = storage
-            .ref(`messages/${doc.id}`)
-            .putString(imageToSend, "data_url");
+          uploadString(uploadTask, imageToSend, "data_url")
 
           // Getting the Upload Progress to show Loading
           uploadTask.on("state_change", (snap) => {
@@ -137,14 +131,16 @@ const ChatRoom = ({ user }) => {
               // when the upload complete
               storage
                 .ref("messages")
-                .child(doc.id)
+                .child(document.id)
                 .getDownloadURL()
-                .then((url) => {
-                  db.collection("messages").doc(doc.id).set(
+                .then(async (url) => {
+                  await setDoc(doc(collection(db, "messages", document.id)), 
                     {
                       sendImage: url,
                     },
-                    { merge: true }
+                    { 
+                      merge: true 
+                    }
                   );
                 })
                 .then(() => {

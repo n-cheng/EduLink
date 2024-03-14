@@ -3,40 +3,10 @@ import Login from "./components/Login";
 import { auth } from "./services/firebase";
 import ChatRoom from "./components/ChatRoom";
 import Loading from "./components/Loading/Loading";
-import { fetchToken, onMessageListener } from "./services/firebase";
-
 
 function App() {
   const [user, setUser] = useState(() => auth.currentUser);
   const [initializing, setInitializing] = useState(true);
-
-  const [show, setShow] = useState(false);
-  const [notification, setNotification] = useState({title: '', body: ''});
-  const [isTokenFound, setTokenFound] = useState(false);
-
-  useEffect(() => {
-    let data;
-
-    async function tokenFunc() {
-      data = await fetchToken(setTokenFound);
-      if (data) {
-        console.log("token is ", data);
-      }
-      return data;
-    }
-    tokenFunc();
-  }, [setTokenFound])
-
-  onMessageListener().then(payload => {
-    setNotification({title: payload.notification.title, body: payload.notification.body})
-    setShow(true);
-    console.log(payload);
-  }).catch(err => console.log('failed: ', err));
-
-  const onShowNotificationClicked = () => {
-    setNotification({title: "Notification", body: "This is a test notification"})
-    setShow(true);
-  }
 
   // It is to determine that the is user already logged in or not if yes then set the user
   useEffect(() => {
@@ -63,7 +33,7 @@ function App() {
 
   return (
     <div className="min-h-screen min-w-screen bg-blue-100 dark:bg-gray-700 dark:text-white">
-      {!user ? <Login /> : <ChatRoom user={user} />}
+      {!user ? <Login user={user} /> : <ChatRoom user={user} />}
     </div>
   );
 }
