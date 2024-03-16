@@ -24,7 +24,7 @@ const Login = ({ user }) => {
       toast.error(err.message);
       setLoading(false);
     })
-    saveMessagingDeviceToken(user?.uid);
+    // saveMessagingDeviceToken(user?.uid);
   }
 
   if (loading) return <Loading />;

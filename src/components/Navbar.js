@@ -1,20 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth } from "../services/firebase";
 import { LogoutIcon, BellIcon } from "@heroicons/react/outline";
+
+import { isUserTokenSaved, saveMessagingDeviceToken, removeMessagingDeviceToken } from "../services/messaging"
 
 const NotificationButton = () => {
   const [audio] = useState(() => new Audio('https://storage.googleapis.com/edulink/notification-sound.mp3'));
   audio.type = "audio/mp3";
 
+  const [isSubscribed, setIsSubscribed] = useState(null);
+
+  useEffect(() => {
+    const checkUserSubscription = async () => {
+      const userIsSubscribed = await isUserTokenSaved();
+      setIsSubscribed(userIsSubscribed);
+    };
+
+    checkUserSubscription();
+  }, []);
+
   const playNotificationSound = () => {
     audio.play();
   };
+
+  const subscribeToNotification = () => {
+    console.log("subscribeToNotification");
+    saveMessagingDeviceToken();
+    setIsSubscribed(true);
+  };
+
+  const unsubscribeToNotification = () => {
+    console.log("unsubscribeToNotification");
+    removeMessagingDeviceToken();
+    setIsSubscribed(false);
+  };
+
+  const subscribeOrUnsubscribeButton = () => {
+    if (isSubscribed == null) return;
+
+    return <>
+      {
+        isSubscribed ? 
+        <button className="p-2 mr-2 capitalize border-2 border-solid bg-red-500 border-red-500 font-medium rounded-full text-white lg:hover:bg-red-500 lg:hover:text-white notification-button"
+          title="Unsubscribe" onClick={unsubscribeToNotification}>
+            Unsubscribe
+        </button> :
+        <button className="p-2 mr-2 capitalize border-2 border-solid bg-green-500 border-green-500 font-medium rounded-full text-white lg:hover:bg-green-500 lg:hover:text-white notification-button"
+          title="Subscribe" onClick={subscribeToNotification}>
+            Subscribe
+        </button>
+      }
+    </>
+  }
   
   return (
-    <button className="p-2 mr-2 capitalize border-2 border-solid bg-green-500 border-green-500 font-medium rounded-full text-white lg:hover:bg-green-500 lg:hover:text-white notification-button"
-    title="Ring for Assistance" onClick={playNotificationSound}>
-      <BellIcon className="h-6 w-6" />
-    </button>
+    <div className="items-center justify-between">
+      <button className="p-2 mr-2 capitalize border-2 border-solid bg-green-500 border-green-500 font-medium rounded-full text-white lg:hover:bg-green-500 lg:hover:text-white notification-button"
+      title="Ring for Assistance" onClick={playNotificationSound}>
+        <BellIcon className="h-6 w-6" />
+      </button>
+      {
+       subscribeOrUnsubscribeButton() 
+      }
+    </div>
   );
 };
 
