@@ -107,49 +107,49 @@ const ChatRoom = ({ user }) => {
       createdAt: serverTimestamp(),
       email: user.email,
     }).then((document) => {
-        if (imageToSend) {
-          setUploadProgress(0);
+        // if (imageToSend) {
+        //   setUploadProgress(0);
         
-          // upload the image coming from the user
-          const uploadTask = ref(storage, `messages/${document.id}`);
-          // encoding the image to data_url and uploading as data-url
-          uploadString(uploadTask, imageToSend, "data_url")
-            .then(() => {
-              // Getting the Upload Progress to show Loading
-              const unsubscribeProgress = onSnapshot(uploadTask, (snapshot) => {
-                const percentUploaded = Math.round(
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                );
-                setUploadProgress(percentUploaded);
-              });
+        //   // upload the image coming from the user
+        //   const uploadTask = ref(storage, `messages/${document.id}`);
+        //   // encoding the image to data_url and uploading as data-url
+        //   uploadString(uploadTask, imageToSend, "data_url")
+        //     .then(() => {
+        //       // Getting the Upload Progress to show Loading
+        //       const unsubscribeProgress = onSnapshot(uploadTask, (snapshot) => {
+        //         const percentUploaded = Math.round(
+        //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        //         );
+        //         setUploadProgress(percentUploaded);
+        //       });
         
-              // When the upload completes
-              uploadTask
-                .then(async (snapshot) => {
-                  const url = await getDownloadURL(snapshot.ref);
-                  await setDoc(
-                    doc(collection(db, "messages"), document.id), 
-                    {
-                      sendImage: url,
-                    },
-                    { merge: true }
-                  );
-                })
-                .then(() => {
-                  setTimeout(() => {
-                    setImageToSend(null);
-                    setUploadProgress(null);
-                    unsubscribeProgress(); // Unsubscribe from progress updates
-                  }, 1000);
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        }      
+        //       // When the upload completes
+        //       uploadTask
+        //         .then(async (snapshot) => {
+        //           const url = await getDownloadURL(snapshot.ref);
+        //           await setDoc(
+        //             doc(collection(db, "messages"), document.id), 
+        //             {
+        //               sendImage: url,
+        //             },
+        //             { merge: true }
+        //           );
+        //         })
+        //         .then(() => {
+        //           setTimeout(() => {
+        //             setImageToSend(null);
+        //             setUploadProgress(null);
+        //             unsubscribeProgress(); // Unsubscribe from progress updates
+        //           }, 1000);
+        //         })
+        //         .catch((err) => {
+        //           console.error(err);
+        //         });
+        //     })
+        //     .catch((err) => {
+        //       console.error(err);
+        //     });
+        // }      
       });
 
     scrollToBottom();
@@ -239,40 +239,44 @@ const ChatRoom = ({ user }) => {
           type="submit"
           onClick={sendButton ? sendMessage : () => setShowMenu(!showMenu)}
         >
-          {sendButton ? (
+          <PaperAirplaneIcon className="w-7 h-7" />
+          {/* {sendButton ? (
             <PaperAirplaneIcon className="w-7 h-7" />
           ) : (
             <PlusIcon className="w-7 h-7" />
-          )}
+          )} */}
         </button>
 
         {/* Ref of File picker and hidden*/}
-        <input
+        {/* <input
           ref={imagePickerRef}
           onChange={addImageToSend}
           type="file"
           accept="image/*"
           hidden
-        />
+        /> */}
       </form>
 
-      <div
+      {/* <div
         className={`${
           !showMenu
             ? "opacity-0 h-0 m-0  overflow-hidden"
             : "opacity-100 h-auto mt-5 mb-2"
         } flex justify-center items-center transition-opacity duration-500 ease-in-out`}
       >
-        <div className="flex items-center">
+        <div className="flex items-center"> */}
           {/* Photo Picker Container */}
-          <div
+          {/* <div
             className="p-6 bg-transparent hover:bg-blue-400 border-2 text-blue-400 border-blue-400 border-solid hover:text-white rounded-md cursor-pointer"
             onClick={imagePicker}
           >
             <PhotographIcon className="base-icon" />
           </div>
         </div>
-      </div>
+
+      </div> */}
+
+      
     </div>
   );
 };
