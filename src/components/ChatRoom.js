@@ -109,49 +109,47 @@ const ChatRoom = ({ user }) => {
     }).then((document) => {
         if (imageToSend) {
           setUploadProgress(0);
-
+        
           // upload the image coming from the user
-          const uploadTask = ref(storage, `messages/${document.id}`)
+          const uploadTask = ref(storage, `messages/${document.id}`);
           // encoding the image to data_url and uploading as data-url
           uploadString(uploadTask, imageToSend, "data_url")
-
-          // Getting the Upload Progress to show Loading
-          uploadTask.on("state_change", (snap) => {
-            const percentUploaded = Math.round(
-              (snap.bytesTransferred / snap.totalBytes) * 100
-            );
-            setUploadProgress(percentUploaded);
-          });
-
-          uploadTask.on(
-            "state_change",
-            null,
-            (err) => console.error(err),
-            () => {
-              // when the upload complete
-              storage
-                .ref("messages")
-                .child(document.id)
-                .getDownloadURL()
-                .then(async (url) => {
-                  await setDoc(doc(collection(db, "messages", document.id)), 
+            .then(() => {
+              // Getting the Upload Progress to show Loading
+              const unsubscribeProgress = onSnapshot(uploadTask, (snapshot) => {
+                const percentUploaded = Math.round(
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                setUploadProgress(percentUploaded);
+              });
+        
+              // When the upload completes
+              uploadTask
+                .then(async (snapshot) => {
+                  const url = await getDownloadURL(snapshot.ref);
+                  await setDoc(
+                    doc(collection(db, "messages"), document.id), 
                     {
                       sendImage: url,
                     },
-                    { 
-                      merge: true 
-                    }
+                    { merge: true }
                   );
                 })
                 .then(() => {
                   setTimeout(() => {
                     setImageToSend(null);
                     setUploadProgress(null);
+                    unsubscribeProgress(); // Unsubscribe from progress updates
                   }, 1000);
+                })
+                .catch((err) => {
+                  console.error(err);
                 });
-            }
-          );
-        }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }      
       });
 
     scrollToBottom();
